@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>lifeOfAmeba</title>
+	<style>
+		#myCanvas{
+			border: 1px solid red;
+		}
+	</style>
+</head>
+<body>
+<button id="create">아메바를 만드는 버튼</button>
+<canvas id="myCanvas" width="800px" height="800px" ></canvas>
+	
+<script>
+//기본 캔버스 셋팅
+	var canvas = document.querySelector("#myCanvas");
+	var context = canvas.getContext("2d");
+	
+	//배경
+	var bg = new Image();
+	bg.src ="images/bg_uni.jpg";	
+
+	var amebaList =[];
+
+	//음식관련
+	var randomLocX = Math.random()*800;
+	var randomLocY = Math.random()*800;
+
+	var count = 1;
+
+	document.querySelector("#create").addEventListener("click",function(){
+		ameba();
+		foodMaker();
+	})
+
+
+
+
+	var ameba = function(){
+		var locateX =400;
+		var locateY =400;
+
+		var xV = 5;
+		var yV = 5;
+
+		//context.strokeStyle="#"+(Math.round(Math.random()*16777215)).toString(16);
+		var color = "#"+(Math.round(Math.random()*16777215)).toString(16);
+
+		
+
+		var life = 10;
+
+		var obj = {
+			x:locateX,
+			y:locateY,
+			color:color,
+			xV:xV,
+			yV:yV,
+			life:life
+		};
+		amebaList.push(obj);
+	}
+
+	var reproduction =function(){};
+
+	var time = function(){
+		if(count%100 != 0){
+			return;
+		}
+		for (var i = 0; i < amebaList.length; i++) {
+			var tmp=amebaList[i];
+			tmp.life--;
+			if(tmp.life==0){
+				amebaList.splice(i,1);
+			}
+		}
+	};
+
+	var foodMaker = function(){
+		randomLocX = Math.random()*800;
+		randomLocY = Math.random()*800;
+
+		context.beginPath();
+		context.arc(randomLocX ,randomLocY,5,0,2*Math.PI);
+		context.stroke();
+
+		//console.log(randomLocX +" |||" + randomLocY);
+	};
+
+	foodMaker();
+
+
+	var chaseFood = function(){
+
+		for(i=0 ; i<amebaList.length ; i++){
+			var tmp = amebaList[i]
+			 var distanceX = Math.abs(randomLocX - tmp.x);
+			 var distanceY = Math.abs(randomLocY - tmp.y);
+			
+			// x 움직임
+			if(tmp.x < randomLocX){
+				
+					//tmp.x = tmp.x+(distanceX/1000)*tmp.xV;
+					tmp.x = tmp.x+tmp.xV/1000;
+				
+			}else{
+				
+					tmp.x = tmp.x-tmp.xV/1000;
+					//tmp.x = tmp.x-(distanceX/1000)*tmp.xV;
+					
+				
+			}
+
+			// y movement
+			if(tmp.y < randomLocY){
+				
+					tmp.y = tmp.y+tmp.yV/1000;
+				//tmp.y = tmp.y+(distanceY/1000)*tmp.yV;
+					
+				
+			}else{
+				
+					tmp.y = tmp.y-tmp.yV/1000;
+				//tmp.y = tmp.y-(distanceY/1000)*tmp.yv;
+					
+				
+			}
+
+		};
+
+
+	};
+
+	var theRuleOftheNature = function(){
+		//bakcground
+		context.drawImage(bg,0,0,800,800);
+		//food
+		context.beginPath();
+		context.arc(randomLocX ,randomLocY,5,0,2*Math.PI);
+		context.stroke();
+		//amebas
+		for (var i = 0; i < amebaList.length; i++) {
+			var tmp = amebaList[i];
+			context.strokeStyle = tmp.color;
+			context.beginPath();
+			context.arc(tmp.x,tmp.y,30,0,2*Math.PI);
+			context.stroke();
+
+			//chaseFood(tmp.type);
+			//eatFood(tmp.type)
+			chaseFood();
+		}
+
+		time();
+	};
+
+	setInterval(theRuleOftheNature,10);
+
+
+
+
+
+
+
+
+
+
+</script>	
+
+
+
+
+</body>
+</html>
