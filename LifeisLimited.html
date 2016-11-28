@@ -10,21 +10,21 @@
 	</style>
 </head>
 <body>
-<button id="create">아메바를 만드는 버튼</button>
+<button id="create">the click of Creation</button>
 <canvas id="myCanvas" width="800px" height="800px" ></canvas>
 	
 <script>
-//기본 캔버스 셋팅
+//basic html canvas settings
 	var canvas = document.querySelector("#myCanvas");
 	var context = canvas.getContext("2d");
 	
-	//배경
+	//background
 	var bg = new Image();
 	bg.src ="images/bg_uni.jpg";	
 
 	var amebaList =[];
 
-	//음식관련
+	//food location
 	var randomLocX = Math.random()*800;
 	var randomLocY = Math.random()*800;
 
@@ -100,7 +100,7 @@
 			 var distanceX = Math.abs(randomLocX - tmp.x);
 			 var distanceY = Math.abs(randomLocY - tmp.y);
 			
-			// x 움직임
+			// x movement of amebas
 			if(tmp.x < randomLocX){
 				
 					//tmp.x = tmp.x+(distanceX/1000)*tmp.xV;
@@ -135,13 +135,13 @@
 	};
 
 	var theRuleOftheNature = function(){
-		//bakcground
+		//drawing bakcground
 		context.drawImage(bg,0,0,800,800);
-		//food
+		//drawing food
 		context.beginPath();
 		context.arc(randomLocX ,randomLocY,5,0,2*Math.PI);
 		context.stroke();
-		//amebas
+		//drawing amebas
 		for (var i = 0; i < amebaList.length; i++) {
 			var tmp = amebaList[i];
 			context.strokeStyle = tmp.color;
