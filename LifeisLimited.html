@@ -32,7 +32,14 @@
 
 	document.querySelector("#create").addEventListener("click",function(){
 		ameba();
-		foodMaker();
+		
+	})
+
+	document.querySelectorAll("body")[0].addEventListener("click",function(e){
+		console.log("콘솔 찍힘 ㅋ "+ e.offsetX + "|||||"+ e.offsetY);
+		var x = e.offsetX;
+		var y = e.offsetY;
+		foodMaker(x,y);
 	})
 
 
@@ -73,16 +80,32 @@
 		for (var i = 0; i < amebaList.length; i++) {
 			var tmp=amebaList[i];
 			tmp.life--;
-			if(tmp.life==0){
+			if(tmp.life<=0){
 				amebaList.splice(i,1);
 			}
 		}
 	};
+	// var test=function(a, b){
+	// 	if(a){
 
-	var foodMaker = function(){
-		randomLocX = Math.random()*800;
-		randomLocY = Math.random()*800;
+	// 	}else{
 
+	// 	}
+	// };
+	// test();
+	var foodMaker = function(x,y){   // 자바 스크립트에서 오버 로딩하는 방법
+		//randomLocX = Math.random()*800;
+		//randomLocY = Math.random()*800;
+		if(x!=undefined){
+			randomLocX = x;
+			randomLocY = y;
+			
+		}else{
+			randomLocX = Math.random()*800;
+			randomLocY = Math.random()*800;
+		}
+
+		
 		context.beginPath();
 		context.arc(randomLocX ,randomLocY,5,0,2*Math.PI);
 		context.stroke();
@@ -90,7 +113,9 @@
 		//console.log(randomLocX +" |||" + randomLocY);
 	};
 
-	foodMaker();
+	
+
+	
 
 
 	var chaseFood = function(){
@@ -99,16 +124,18 @@
 			var tmp = amebaList[i]
 			 var distanceX = Math.abs(randomLocX - tmp.x);
 			 var distanceY = Math.abs(randomLocY - tmp.y);
+
+			 
 			
 			// x 움직임
 			if(tmp.x < randomLocX){
 				
 					//tmp.x = tmp.x+(distanceX/1000)*tmp.xV;
-					tmp.x = tmp.x+tmp.xV/1000;
+					tmp.x = tmp.x+tmp.xV/100;
 				
 			}else{
 				
-					tmp.x = tmp.x-tmp.xV/1000;
+					tmp.x = tmp.x-tmp.xV/100;
 					//tmp.x = tmp.x-(distanceX/1000)*tmp.xV;
 					
 				
@@ -117,13 +144,13 @@
 			// y movement
 			if(tmp.y < randomLocY){
 				
-					tmp.y = tmp.y+tmp.yV/1000;
+					tmp.y = tmp.y+tmp.yV/100;
 				//tmp.y = tmp.y+(distanceY/1000)*tmp.yV;
 					
 				
 			}else{
 				
-					tmp.y = tmp.y-tmp.yV/1000;
+					tmp.y = tmp.y-tmp.yV/100;
 				//tmp.y = tmp.y-(distanceY/1000)*tmp.yv;
 					
 				
@@ -131,6 +158,24 @@
 
 		};
 
+
+	};
+
+	var eatFood = function(){
+		for (var i = 0; i < amebaList.length; i++) {
+			var tmp = amebaList[i];
+			var XX=Math.abs(tmp.x-randomLocX);
+			var YY=Math.abs(tmp.y-randomLocY);
+			if(XX<5 && YY <5){
+				foodMaker();
+				tmp.life = 10;
+				//score1++;
+				//tmp.size+=10;
+				//console.log("ameba1 :   "+score1);
+				//document.querySelector("#score"+tmp.type).innerText = "아메바1 :   " + score2;
+				
+			}
+		}
 
 	};
 
@@ -142,19 +187,23 @@
 		context.arc(randomLocX ,randomLocY,5,0,2*Math.PI);
 		context.stroke();
 		//amebas
+		time();
+		eatFood();
+		chaseFood();
+			
 		for (var i = 0; i < amebaList.length; i++) {
 			var tmp = amebaList[i];
 			context.strokeStyle = tmp.color;
 			context.beginPath();
 			context.arc(tmp.x,tmp.y,30,0,2*Math.PI);
 			context.stroke();
+			
 
-			//chaseFood(tmp.type);
-			//eatFood(tmp.type)
-			chaseFood();
+			
+			
 		}
 
-		time();
+		
 	};
 
 	setInterval(theRuleOftheNature,10);
